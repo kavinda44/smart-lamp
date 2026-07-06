@@ -186,3 +186,60 @@
     opacity: 0;
   }
 }
+
+/* --- Added Mobile Responsiveness --- */
+@media screen and (max-width: 768px) {
+  .header-text {
+    margin-top: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  .header-text h1 {
+    font-size: 1.8rem;
+  }
+  
+  .header-text p {
+    font-size: 1rem;
+  }
+  
+  .lamp-wrapper {
+    max-width: 90vw;
+  }
+  
+  .progress-text {
+    font-size: 1.5rem;
+    bottom: 30px;
+  }
+  
+  .draggable-candle {
+    width: 50px;
+    height: 90px;
+  }
+  
+  /* Shrink hitboxes and flames slightly so they fit over the smaller lamp image */
+  .wick-hitbox {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .flame {
+    width: 14px;
+    height: 28px;
+  }
+  
+  .glow {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .target-indicator {
+    width: 35px;
+    height: 35px;
+  }
+  
+  /* Make the welcome text readable on narrow portrait screens */
+  .welcome-text {
+    font-size: 12vw;
+    padding: 0 1rem;
+  }
+}
