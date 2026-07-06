@@ -1,62 +1,153 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
-  const [litLamps, setLitLamps] = useState(Array(10).fill(false));
+  const [litWicks, setLitWicks] = useState(Array(10).fill(false));
   const [showWelcome, setShowWelcome] = useState(false);
+  
+  const [candlePos, setCandlePos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleTouch = (index) => {
-    // Prevent re-triggering if already lit
-    if (litLamps[index]) return;
+  const audioRef = useRef(null);
+  const [hasMusicStarted, setHasMusicStarted] = useState(false);
 
-    const newLamps = [...litLamps];
-    newLamps[index] = true;
-    setLitLamps(newLamps);
+  const getStartingPosition = () => ({
+    x: window.innerWidth - 150,
+    y: window.innerHeight - 150
+  });
 
-    // Check if all 10 wicks are now true
-    if (newLamps.every(lamp => lamp === true)) {
-      // Add a 1.2-second dramatic pause before showing the welcome message
-      setTimeout(() => {
-        setShowWelcome(true);
-      }, 1200); 
+  useEffect(() => {
+    setCandlePos(getStartingPosition());
+  }, []);
+
+  const handlePointerDown = (e) => {
+    setIsDragging(true);
+    setCandlePos({ x: e.clientX, y: e.clientY }); 
+    
+    
+    if (!hasMusicStarted && audioRef.current) {
+      audioRef.current.play().catch(err => console.log("Audio play blocked by browser:", err));
+      setHasMusicStarted(true);
     }
   };
 
-  return (
-    <div className="app-container">
-      {!showWelcome ? (
-        <div className="lamp-section">
-          <h1 className="title">Smart Classroom Inauguration</h1>
-          <p className="subtitle">Touch a wick to light the lamp</p>
+  const handlePointerMove = (e) => {
+    if (!isDragging) return;
+    
+    setCandlePos({ x: e.clientX, y: e.clientY });
+
+    const elementsUnderPointer = document.elementsFromPoint(e.clientX, e.clientY);
+    const nextValidWickIndex = litWicks.indexOf(false);
+    
+    elementsUnderPointer.forEach(el => {
+      if (el.dataset.wickIndex !== undefined) {
+        const index = parseInt(el.dataset.wickIndex);
+        
+        if (index === nextValidWickIndex) {
           
-          {/* Optional: Add a real lamp image here via CSS background */}
-          <div className="lamp-container">
-            <div className="wicks-layout">
-              {litLamps.map((isLit, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleTouch(index)}
-                  className="touch-target"
-                >
-                  {isLit ? (
-                    <div className="flame-container">
-                      <div className="flame"></div>
-                      <div className="glow"></div>
-                    </div>
-                  ) : (
-                    <div className="unlit-wick"></div>
-                  )}
-                </div>
-              ))}
+          setLitWicks(prev => {
+            const newWicks = [...prev];
+            newWicks[index] = true;
+            
+            if (newWicks.every(w => w === true)) {
+              setTimeout(() => setShowWelcome(true), 1200);
+            }
+            return newWicks;
+          });
+
+          setIsDragging(false);
+          setCandlePos(getStartingPosition());
+        }
+      }
+    });
+  };
+
+  const handlePointerUp = () => {
+    setIsDragging(false);
+    setCandlePos(getStartingPosition());
+  };
+
+  const wickPositions = [
+    { left: '15%', top: '50%' }, 
+    { left: '30%', top: '53%' }, 
+    { left: '50%', top: '55%' }, 
+    { left: '70%', top: '53%' }, 
+    { left: '85%', top: '50%' }, 
+
+    { left: '10%', top: '68%' }, 
+    { left: '28%', top: '72%' }, 
+    { left: '50%', top: '75%' }, 
+    { left: '72%', top: '72%' }, 
+    { left: '90%', top: '68%' }  
+  ];
+
+  const nextValidWickIndex = litWicks.indexOf(false);
+
+  return (
+    <div 
+      className="smart-board-container"
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+    >
+     
+      <audio ref={audioRef} src="/background-music.mp3" loop />
+
+      {!showWelcome ? (
+        <>
+          <div className="header-text">
+            <h1>Smart Classroom Inauguration</h1>
+            <p>Drag the candle to light the next wick</p>
+          </div>
+
+          <div className="main-stage">
+            <div className="lamp-wrapper">
+              <img src="/oil-lamp.png" alt="Traditional Lamp" className="lamp-image" />
+              
+              {wickPositions.map((pos, index) => {
+                const isTargetWick = index === nextValidWickIndex;
+
+                return (
+                  <div 
+                    key={index}
+                    className="wick-hitbox"
+                    data-wick-index={index}
+                    style={{ top: pos.top, left: pos.left }}
+                  >
+                    {isDragging && isTargetWick && (
+                      <div className="target-indicator"></div>
+                    )}
+
+                    {litWicks[index] && (
+                      <div className="flame-container">
+                        <div className="flame"></div>
+                        <div className="glow"></div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          <div className="progress">
-            {litLamps.filter(l => l).length} / 10 Lit
+          <div className="progress-text">
+            {litWicks.filter(l => l).length} / 10 Lit
           </div>
-        </div>
+
+          <div 
+            className={`draggable-candle ${isDragging ? 'dragging' : ''}`}
+            style={{ 
+              left: `${candlePos.x}px`, 
+              top: `${candlePos.y}px` 
+            }}
+            onPointerDown={handlePointerDown}
+          >
+            <img src="/candle.png" alt="Lighting Candle" />
+            <div className="candle-flame-effect"></div>
+          </div>
+        </>
       ) : (
-        <div className="welcome-section">
+        <div className="welcome-screen">
           <h1 className="welcome-text">Welcome to Our Smart Room!</h1>
         </div>
       )}
