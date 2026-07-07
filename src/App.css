@@ -187,7 +187,7 @@
   }
 }
 
-/* --- Added Mobile Responsiveness --- */
+
 @media screen and (max-width: 768px) {
   .header-text {
     margin-top: 1.5rem;
@@ -216,7 +216,7 @@
     height: 90px;
   }
   
-  /* Shrink hitboxes and flames slightly so they fit over the smaller lamp image */
+
   .wick-hitbox {
     width: 40px;
     height: 40px;
@@ -237,7 +237,7 @@
     height: 35px;
   }
   
-  /* Make the welcome text readable on narrow portrait screens */
+ 
   .welcome-text {
     font-size: 12vw;
     padding: 0 1rem;
@@ -245,7 +245,7 @@
 }
 
 
-/* --- Realistic Curtain Styling --- */
+
 .curtain-overlay {
   position: fixed;
   top: 0;
@@ -269,7 +269,7 @@
   top: 0;
   width: 50vw;
   height: 100vh;
-  /* Complex gradient to simulate deep velvet folds, shadows, and highlights */
+
   background: linear-gradient(
     to right,
     #3a0000 0%,
@@ -282,21 +282,20 @@
     #8b0000 87%,
     #3a0000 100%
   );
-  /* A smooth, heavy cubic-bezier to make the fabric feel weighty as it opens */
+ 
   transition: transform 2.2s cubic-bezier(0.65, 0.05, 0.1, 1);
 }
 
 .curtain.left {
   left: 0;
   transform-origin: left;
-  /* Deep shadow where the left curtain meets the right curtain */
   box-shadow: inset -15px 0 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0,0,0,0.9);
 }
 
 .curtain.right {
   right: 0;
   transform-origin: right;
-  /* Reversed gradient so the lighting perfectly mirrors the left side */
+
   background: linear-gradient(
     to left,
     #3a0000 0%,
@@ -309,7 +308,7 @@
     #8b0000 87%,
     #3a0000 100%
   );
-  /* Deep shadow where the right curtain meets the left curtain */
+
   box-shadow: inset 15px 0 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0,0,0,0.9);
 }
 

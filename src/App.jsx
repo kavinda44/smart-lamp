@@ -8,7 +8,7 @@ function App() {
   const [candlePos, setCandlePos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  // --- NEW: Curtain State ---
+
   const [isCurtainOpen, setIsCurtainOpen] = useState(false);
 
   const audioRef = useRef(null);
@@ -23,11 +23,11 @@ function App() {
     setCandlePos(getStartingPosition());
   }, []);
 
-  // --- NEW: Handle Curtain Opening ---
+ 
   const handleOpenCurtain = () => {
     setIsCurtainOpen(true);
     
-    // Start music as the curtain opens!
+   
     if (!hasMusicStarted && audioRef.current) {
       audioRef.current.play().catch(err => console.log("Audio play blocked:", err));
       setHasMusicStarted(true);
@@ -100,7 +100,7 @@ function App() {
     >
       <audio ref={audioRef} src="/background-music.mp3" loop />
 
-      {/* --- NEW: The Curtain Overlay --- */}
+      
       <div 
         className={`curtain-overlay ${isCurtainOpen ? 'open' : ''}`} 
         onClick={handleOpenCurtain}
