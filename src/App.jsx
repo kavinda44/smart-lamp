@@ -108,7 +108,7 @@ function App() {
         <div className="curtain left"></div>
         <div className="curtain right"></div>
         <div className="curtain-content">
-          <h1>K/Talatuoya Tamil Maha Vidiyalaya</h1>
+          <h1>K/Talatuoya Tamil Maha Vidyalaya</h1>
           <p>Touch Screen to Begin</p>
         </div>
       </div>
@@ -116,7 +116,7 @@ function App() {
       {!showWelcome ? (
         <>
           <div className="header-text">
-            <h1>K/Talatuoya Tamil Maha Vidiyalaya</h1>
+            <h1>K/Talatuoya Tamil Maha Vidyalaya</h1>
           </div>
 
           <div className="main-stage">
