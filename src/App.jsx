@@ -8,6 +8,9 @@ function App() {
   const [candlePos, setCandlePos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
+  // --- NEW: Curtain State ---
+  const [isCurtainOpen, setIsCurtainOpen] = useState(false);
+
   const audioRef = useRef(null);
   const [hasMusicStarted, setHasMusicStarted] = useState(false);
 
@@ -20,15 +23,20 @@ function App() {
     setCandlePos(getStartingPosition());
   }, []);
 
+  // --- NEW: Handle Curtain Opening ---
+  const handleOpenCurtain = () => {
+    setIsCurtainOpen(true);
+    
+    // Start music as the curtain opens!
+    if (!hasMusicStarted && audioRef.current) {
+      audioRef.current.play().catch(err => console.log("Audio play blocked:", err));
+      setHasMusicStarted(true);
+    }
+  };
+
   const handlePointerDown = (e) => {
     setIsDragging(true);
     setCandlePos({ x: e.clientX, y: e.clientY }); 
-    
-    
-    if (!hasMusicStarted && audioRef.current) {
-      audioRef.current.play().catch(err => console.log("Audio play blocked by browser:", err));
-      setHasMusicStarted(true);
-    }
   };
 
   const handlePointerMove = (e) => {
@@ -90,14 +98,25 @@ function App() {
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
     >
-     
       <audio ref={audioRef} src="/background-music.mp3" loop />
+
+      {/* --- NEW: The Curtain Overlay --- */}
+      <div 
+        className={`curtain-overlay ${isCurtainOpen ? 'open' : ''}`} 
+        onClick={handleOpenCurtain}
+      >
+        <div className="curtain left"></div>
+        <div className="curtain right"></div>
+        <div className="curtain-content">
+          <h1>K/Talatuoya Tamil Maha Vidiyalaya</h1>
+          <p>Touch Screen to Begin</p>
+        </div>
+      </div>
 
       {!showWelcome ? (
         <>
           <div className="header-text">
-            <h1>Smart Classroom Inauguration</h1>
-            <p>Drag the candle to light the next wick</p>
+            <h1>K/Talatuoya Tamil Maha Vidiyalaya</h1>
           </div>
 
           <div className="main-stage">

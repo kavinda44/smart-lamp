@@ -243,3 +243,106 @@
     padding: 0 1rem;
   }
 }
+
+
+/* --- Realistic Curtain Styling --- */
+.curtain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.curtain-overlay.open {
+  pointer-events: none;
+}
+
+.curtain {
+  position: absolute;
+  top: 0;
+  width: 50vw;
+  height: 100vh;
+  /* Complex gradient to simulate deep velvet folds, shadows, and highlights */
+  background: linear-gradient(
+    to right,
+    #3a0000 0%,
+    #8b0000 12%,
+    #b22222 25%,
+    #3a0000 38%,
+    #8b0000 50%,
+    #b22222 62%,
+    #3a0000 75%,
+    #8b0000 87%,
+    #3a0000 100%
+  );
+  /* A smooth, heavy cubic-bezier to make the fabric feel weighty as it opens */
+  transition: transform 2.2s cubic-bezier(0.65, 0.05, 0.1, 1);
+}
+
+.curtain.left {
+  left: 0;
+  transform-origin: left;
+  /* Deep shadow where the left curtain meets the right curtain */
+  box-shadow: inset -15px 0 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0,0,0,0.9);
+}
+
+.curtain.right {
+  right: 0;
+  transform-origin: right;
+  /* Reversed gradient so the lighting perfectly mirrors the left side */
+  background: linear-gradient(
+    to left,
+    #3a0000 0%,
+    #8b0000 12%,
+    #b22222 25%,
+    #3a0000 38%,
+    #8b0000 50%,
+    #b22222 62%,
+    #3a0000 75%,
+    #8b0000 87%,
+    #3a0000 100%
+  );
+  /* Deep shadow where the right curtain meets the left curtain */
+  box-shadow: inset 15px 0 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0,0,0,0.9);
+}
+
+/* The slide-open animation */
+.curtain-overlay.open .curtain.left {
+  transform: translateX(-100%);
+}
+
+.curtain-overlay.open .curtain.right {
+  transform: translateX(100%);
+}
+
+.curtain-content {
+  position: relative;
+  z-index: 10000;
+  text-align: center;
+  color: #fbbf24;
+  text-shadow: 2px 4px 15px rgba(0,0,0,0.9);
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+
+.curtain-content h1 {
+  font-size: clamp(2rem, 5vw, 5rem);
+  margin-bottom: 1rem;
+}
+
+.curtain-content p {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  color: white;
+  animation: pulse 2s infinite alternate;
+}
+
+.curtain-overlay.open .curtain-content {
+  opacity: 0;
+}
